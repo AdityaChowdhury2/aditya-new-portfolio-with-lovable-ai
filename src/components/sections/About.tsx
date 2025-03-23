@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { useIntersectionObserver } from '@/utils/scrollUtils';
 import { motion } from 'framer-motion';
 import { Github, Linkedin, Mail, ExternalLink } from 'lucide-react';
 
 const About: React.FC = () => {
-  const [ref, isVisible] = useIntersectionObserver({ threshold: 0.2 });
+  const [ref, isVisible] = useIntersectionObserver({ threshold: 0.2, rootMargin: '0px' });
 
   const containerVariants = {
     hidden: { opacity: 0 },

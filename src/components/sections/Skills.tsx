@@ -62,7 +62,7 @@ const SkillBar: React.FC<{ name: string; level: number; index: number; isVisible
 };
 
 const Skills: React.FC = () => {
-  const [ref, isVisible] = useIntersectionObserver({ threshold: 0.1 });
+  const [ref, isVisible] = useIntersectionObserver({ threshold: 0.1, rootMargin: '0px' });
 
   return (
     <section id="skills" className="py-24 bg-muted/30">

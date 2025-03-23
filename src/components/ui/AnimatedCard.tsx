@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useIntersectionObserver } from '@/utils/scrollUtils';
 import { motion } from 'framer-motion';
@@ -22,7 +21,7 @@ const AnimatedCard: React.FC<AnimatedCardProps> = ({
   index,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [ref, isVisible] = useIntersectionObserver();
+  const [ref, isVisible] = useIntersectionObserver({ threshold: 0.1, rootMargin: '0px' });
 
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -39,7 +38,6 @@ const AnimatedCard: React.FC<AnimatedCardProps> = ({
 
   return (
     <motion.div
-      // @ts-expect-error - framer-motion ref type
       ref={ref}
       className="group h-full"
       variants={cardVariants}

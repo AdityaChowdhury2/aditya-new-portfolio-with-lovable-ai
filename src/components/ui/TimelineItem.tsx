@@ -21,7 +21,7 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
   index,
   isLast,
 }) => {
-  const [ref, isVisible] = useIntersectionObserver({ threshold: 0.2 });
+  const [ref, isVisible] = useIntersectionObserver({ threshold: 0.2, rootMargin: '0px' });
   const isEven = index % 2 === 0;
 
   const variants = {

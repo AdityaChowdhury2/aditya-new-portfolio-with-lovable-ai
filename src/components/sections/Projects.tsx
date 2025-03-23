@@ -1,4 +1,3 @@
-
 import React from 'react';
 import AnimatedCard from '@/components/ui/AnimatedCard';
 import { motion } from 'framer-motion';
@@ -41,7 +40,7 @@ const projects: Project[] = [
 ];
 
 const Projects: React.FC = () => {
-  const [ref, isVisible] = useIntersectionObserver({ threshold: 0.1 });
+  const [ref, isVisible] = useIntersectionObserver({ threshold: 0.1, rootMargin: '0px' });
 
   return (
     <section id="projects" className="py-24 bg-muted/30">
@@ -51,7 +50,6 @@ const Projects: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          // @ts-expect-error - framer-motion ref type
           ref={ref}
         >
           <h3 className="text-base font-medium text-primary mb-2">MY WORK</h3>

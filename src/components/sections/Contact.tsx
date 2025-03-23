@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useIntersectionObserver } from '@/utils/scrollUtils';
@@ -6,7 +5,7 @@ import { Mail, Phone, MapPin, Send } from 'lucide-react';
 import { toast } from 'sonner';
 
 const Contact: React.FC = () => {
-  const [ref, isVisible] = useIntersectionObserver({ threshold: 0.2 });
+  const [ref, isVisible] = useIntersectionObserver({ threshold: 0.2, rootMargin: '0px' });
   const [formData, setFormData] = useState({
     name: '',
     email: '',

@@ -1,4 +1,3 @@
-
 import { useEffect, useState, useRef, RefObject } from 'react';
 
 // Hook to detect when an element enters the viewport
