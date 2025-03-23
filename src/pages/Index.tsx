@@ -7,6 +7,8 @@ import Projects from '@/components/sections/Projects';
 import Experience from '@/components/sections/Experience';
 import Skills from '@/components/sections/Skills';
 import Contact from '@/components/sections/Contact';
+import ThemeSwitcher from '@/components/ui/ThemeSwitcher';
+import TechIconsBackground from '@/components/ui/TechIconsBackground';
 import { initScrollAnimations, useSmoothScroll } from '@/utils/scrollUtils';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -26,7 +28,9 @@ const Index: React.FC = () => {
         exit={{ opacity: 0 }}
         className="relative"
       >
+        <TechIconsBackground animationType="floating" />
         <Navbar />
+        <ThemeSwitcher />
         
         <main>
           <Hero />

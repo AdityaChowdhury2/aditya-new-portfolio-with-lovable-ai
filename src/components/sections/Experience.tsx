@@ -42,18 +42,23 @@ const experiences: Experience[] = [
   }
 ];
 
-const Experience: React.FC = () => {
-  const [ref, isVisible] = useIntersectionObserver({ threshold: 0.1, rootMargin: '0px' });
+const sectionRef = React.useRef<HTMLDivElement>(null);
+const [ref, isVisible] = useIntersectionObserver({ threshold: 0.2, rootMargin: "0px" });
 
+const Experience: React.FC = () => {
   return (
-    <section id="experience" className="py-24 bg-white">
+    <section 
+      id="experience" 
+      className="min-h-screen flex flex-col justify-center relative py-20"
+      ref={sectionRef}
+    >
       <div className="section-container">
         <motion.div 
           className="text-center max-w-2xl mx-auto mb-16"
           initial={{ opacity: 0, y: 20 }}
           animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          ref={ref}
+          ref={ref as React.RefObject<HTMLDivElement>}
         >
           <h3 className="text-base font-medium text-primary mb-2">MY JOURNEY</h3>
           <h2 className="text-3xl md:text-4xl font-bold mb-6">Experience & Education</h2>

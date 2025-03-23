@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -129,7 +128,15 @@ export default {
 				'progress-fill': {
 					'0%': { width: '0%' },
 					'100%': { width: 'var(--fill-width, 100%)' }
-				}
+				},
+				'menu-in': {
+					'0%': { transform: 'scale(0)', opacity: '0' },
+					'100%': { transform: 'scale(1)', opacity: '1' }
+				},
+				'menu-out': {
+					'0%': { transform: 'scale(1)', opacity: '1' },
+					'100%': { transform: 'scale(0)', opacity: '0' }
+				},
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
@@ -143,7 +150,9 @@ export default {
 				'spin-slow': 'spin-slow 15s linear infinite',
 				'type-cursor': 'type-cursor 1s infinite',
 				'bounce-subtle': 'bounce-subtle 2s infinite',
-				'progress-fill': 'progress-fill 1s ease-out forwards'
+				'progress-fill': 'progress-fill 1s ease-out forwards',
+				'menu-in': 'menu-in 0.3s ease-out forwards',
+				'menu-out': 'menu-out 0.3s ease-in forwards',
 			},
 			transitionTimingFunction: {
 				'in-expo': 'cubic-bezier(0.95, 0.05, 0.795, 0.035)',
@@ -162,7 +171,24 @@ export default {
 			backdropFilter: {
 				'glass': 'blur(4px)',
 			},
+			clipPath: {
+				'circle-0': 'circle(0% at top right)',
+				'circle-full': 'circle(150% at top right)',
+			},
 		}
 	},
-	plugins: [require("tailwindcss-animate")],
+	plugins: [
+		require("tailwindcss-animate"),
+		function({ addUtilities }: { addUtilities: Function }) {
+			const newUtilities = {
+				'.clip-path-circle-0': {
+					clipPath: 'circle(0% at top right)',
+				},
+				'.clip-path-circle-full': {
+					clipPath: 'circle(150% at top right)',
+				},
+			}
+			addUtilities(newUtilities)
+		},
+	],
 } satisfies Config;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useIntersectionObserver } from '@/utils/scrollUtils';
 import { motion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
@@ -21,7 +21,7 @@ const AnimatedCard: React.FC<AnimatedCardProps> = ({
   index,
 }) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [ref, isVisible] = useIntersectionObserver({ threshold: 0.1, rootMargin: '0px' });
+  const [ref, isVisible] = useIntersectionObserver({ threshold: 0.1, rootMargin: "0px" });
 
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
@@ -38,7 +38,7 @@ const AnimatedCard: React.FC<AnimatedCardProps> = ({
 
   return (
     <motion.div
-      ref={ref}
+      ref={ref as React.RefObject<HTMLDivElement>}
       className="group h-full"
       variants={cardVariants}
       initial="hidden"

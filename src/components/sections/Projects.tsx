@@ -40,17 +40,22 @@ const projects: Project[] = [
 ];
 
 const Projects: React.FC = () => {
-  const [ref, isVisible] = useIntersectionObserver({ threshold: 0.1, rootMargin: '0px' });
+  const sectionRef = React.useRef<HTMLDivElement>(null);
+  const [ref, isVisible] = useIntersectionObserver({ threshold: 0.2, rootMargin: "0px" });
 
   return (
-    <section id="projects" className="py-24 bg-muted/30">
+    <section 
+      id="projects" 
+      className="py-24 bg-muted/30"
+      ref={sectionRef}
+    >
       <div className="section-container">
         <motion.div 
           className="text-center max-w-2xl mx-auto mb-16"
           initial={{ opacity: 0, y: 20 }}
           animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          ref={ref}
+          ref={ref as React.RefObject<HTMLDivElement>}
         >
           <h3 className="text-base font-medium text-primary mb-2">MY WORK</h3>
           <h2 className="text-3xl md:text-4xl font-bold mb-6">Featured Projects</h2>

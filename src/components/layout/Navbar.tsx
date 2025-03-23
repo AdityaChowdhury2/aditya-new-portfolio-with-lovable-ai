@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useScrollProgress } from '@/utils/scrollUtils';
 import { cn } from '@/lib/utils';
-import { Menu, X } from 'lucide-react';
+import { Zap, Sparkles, X } from 'lucide-react';
 
 interface NavLink {
   label: string;
@@ -67,7 +67,12 @@ const Navbar: React.FC = () => {
         
         <div className="flex items-center justify-between py-4">
           <a href="#home" className="flex items-center">
-            <span className="text-xl font-bold tracking-tight text-foreground">Aditya Chowdhury</span>
+            <span className="text-xl font-bold tracking-tight text-foreground">
+              <span className="text-primary">Aditya</span> Chowdhury
+              <span className="inline-block ml-1 text-xl text-secondary">
+                <Sparkles size={16} className="inline" />
+              </span>
+            </span>
           </a>
           
           {/* Desktop Navigation */}
@@ -100,30 +105,46 @@ const Navbar: React.FC = () => {
             </a>
           </nav>
           
-          {/* Mobile Menu Button */}
+          {/* Mobile Menu Button - Custom Design */}
           <button 
-            className="md:hidden p-2 text-foreground/80 hover:text-foreground"
+            className={`md:hidden p-2 text-foreground/80 hover:text-foreground relative z-50 flex items-center justify-center`}
             onClick={toggleMenu}
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           >
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {isMenuOpen ? (
+              <X size={24} className="text-foreground animate-fade-in" />
+            ) : (
+              <div className={`menu-icon ${isMenuOpen ? 'menu-open' : ''}`}>
+                <span className="line-1"></span>
+                <span className="line-2"></span>
+                <span className="line-3"></span>
+                <Zap size={20} className="absolute text-primary opacity-0 hover:opacity-100 transition-opacity duration-300" />
+              </div>
+            )}
           </button>
         </div>
       </div>
       
-      {/* Mobile Navigation */}
+      {/* Mobile Navigation - Animated Overlay */}
       <div
         className={cn(
-          "md:hidden fixed inset-0 bg-background z-40 transition-transform duration-300 ease-out-expo pt-20",
-          isMenuOpen ? "translate-x-0" : "translate-x-full"
+          "md:hidden fixed inset-0 bg-gradient-animated z-40 transition-all duration-500 ease-out-expo pt-20",
+          isMenuOpen 
+            ? "opacity-100 pointer-events-auto clip-path-circle-full" 
+            : "opacity-0 pointer-events-none clip-path-circle-0"
         )}
       >
-        <nav className="flex flex-col items-center space-y-4 px-4 py-8">
-          {navLinks.map((link) => (
+        <nav className="flex flex-col items-center justify-center h-full space-y-6 px-4 py-8">
+          {navLinks.map((link, index) => (
             <a
               key={link.href}
               href={link.href}
-              className="text-lg font-medium py-3 w-full text-center"
+              className={cn(
+                "text-xl font-bold text-white py-3 w-full text-center transition-all",
+                "transform hover:scale-110 hover:text-white/80",
+                isMenuOpen ? "animate-fade-in-up" : "opacity-0"
+              )}
+              style={{ animationDelay: `${index * 0.1}s` }}
               onClick={(e) => {
                 e.preventDefault();
                 document.querySelector(link.href)?.scrollIntoView({ behavior: 'smooth' });
@@ -135,7 +156,11 @@ const Navbar: React.FC = () => {
           ))}
           <a 
             href="#contact" 
-            className="w-full mt-4 button-primary text-center"
+            className={cn(
+              "mt-4 button-primary text-center w-full max-w-xs",
+              isMenuOpen ? "animate-fade-in-up" : "opacity-0"
+            )}
+            style={{ animationDelay: `${navLinks.length * 0.1}s` }}
             onClick={(e) => {
               e.preventDefault();
               document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
