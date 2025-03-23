@@ -1,181 +1,146 @@
 
 import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 
-// Define tech stack icons
+// List of tech icons
 const techIcons = [
-  { name: 'HTML', icon: '🌐' },
-  { name: 'CSS', icon: '🎨' },
-  { name: 'JavaScript', icon: '📜' },
-  { name: 'React', icon: '⚛️' },
-  { name: 'TypeScript', icon: '📘' },
-  { name: 'Node.js', icon: '🟢' },
-  { name: 'MongoDB', icon: '🍃' },
-  { name: 'Firebase', icon: '🔥' },
-  { name: 'Git', icon: '📊' },
-  { name: 'Tailwind', icon: '💨' },
-  { name: 'Angular', icon: '🔺' },
-  { name: 'Express', icon: '🚂' },
+  'html5', 'css3', 'javascript', 'typescript', 'react', 'angular',
+  'nodejs', 'mongodb', 'firebase', 'git', 'github', 'tailwind',
+  'express', 'ionic', 'vercel'
 ];
 
-interface TechIconProps {
-  icon: string;
-  name: string;
-  style: React.CSSProperties;
-  animationType: 'floating' | 'pulsing' | 'flying' | 'streaking' | 'orbiting';
-}
-
-const TechIcon: React.FC<TechIconProps> = ({ icon, name, style, animationType }) => {
-  const variants = {
-    floating: { y: [0, -20, 0], rotate: [0, 180, 360], transition: { duration: 8, repeat: Infinity, ease: 'easeInOut' } },
-    pulsing: { scale: [1, 1.1, 1], opacity: [0.7, 1, 0.7], transition: { duration: 3, repeat: Infinity, ease: 'easeInOut' } },
-    flying: { 
-      initial: { opacity: 0, x: -100 },
-      animate: { opacity: 1, x: 0, transition: { duration: 0.8 } }
-    },
-    streaking: { 
-      x: ['calc(-100vw - 100px)', 'calc(100vw + 100px)'], 
-      y: ['calc(-20vh)', 'calc(120vh)'],
-      opacity: [0, 0.7, 0],
-      scale: [0.5, 1.5],
-      transition: { 
-        duration: 6, 
-        repeat: Infinity, 
-        ease: 'linear',
-        times: [0, 0.1, 0.9, 1],
-        repeatDelay: Math.random() * 5 
-      }
-    },
-    orbiting: {
-      rotate: [0, 360],
-      transition: { duration: 20, repeat: Infinity, ease: 'linear' }
-    }
-  };
-
-  if (animationType === 'streaking') {
-    return (
-      <motion.div
-        className="tech-icon streaking-icon"
-        style={style}
-        variants={variants}
-        animate={animationType}
-        title={name}
-      >
-        <span className="text-4xl">{icon}</span>
-      </motion.div>
-    );
-  }
-
-  if (animationType === 'orbiting') {
-    return (
-      <motion.div
-        className="tech-icon absolute"
-        style={{
-          ...style,
-          transformOrigin: 'center',
-        }}
-        variants={variants}
-        animate={animationType}
-        title={name}
-      >
-        <span className="text-3xl">{icon}</span>
-      </motion.div>
-    );
-  }
-
-  return (
-    <motion.div
-      className={`tech-icon ${animationType}-icon`}
-      style={style}
-      variants={variants[animationType === 'flying' ? 'flying' : animationType]}
-      initial={animationType === 'flying' ? "initial" : undefined}
-      animate={animationType === 'flying' ? "animate" : animationType}
-      title={name}
-    >
-      <span className="text-3xl">{icon}</span>
-    </motion.div>
-  );
-};
-
 interface TechIconsBackgroundProps {
-  animationType?: 'floating' | 'pulsing' | 'flying' | 'streaking' | 'orbiting';
+  animationType?: 'floating' | 'pulse' | 'orbit' | 'wave';
+  density?: 'low' | 'medium' | 'high';
+  speed?: 'slow' | 'medium' | 'fast';
 }
 
-const TechIconsBackground: React.FC<TechIconsBackgroundProps> = ({ 
-  animationType = 'floating'
+const TechIconsBackground: React.FC<TechIconsBackgroundProps> = ({
+  animationType = 'floating',
+  density = 'medium',
+  speed = 'medium',
 }) => {
-  const [icons, setIcons] = useState<Array<{ top: number; left: number; delay: number; icon: string; name: string; }>>([]);
+  const [icons, setIcons] = useState<{ icon: string; x: number; y: number; size: number; delay: number }[]>([]);
 
   useEffect(() => {
+    // Determine how many icons to show based on density
+    const iconCount = 
+      density === 'low' ? 10 :
+      density === 'medium' ? 20 :
+      30;
+    
     // Generate random positions for icons
-    const generatedIcons = techIcons.map((tech) => {
-      if (animationType === 'orbiting') {
-        const angle = Math.random() * Math.PI * 2;
-        const radius = 30 + Math.random() * 20; // 30-50% of viewport width
-        
-        return {
-          top: 50 + Math.sin(angle) * radius, // 50% + offset
-          left: 50 + Math.cos(angle) * radius, // 50% + offset
-          delay: Math.random() * 10,
-          icon: tech.icon,
-          name: tech.name,
-        };
-      }
-      
+    const newIcons = Array.from({ length: iconCount }, (_, i) => {
       return {
-        top: Math.random() * 100,
-        left: Math.random() * 100,
-        delay: Math.random() * 10,
-        icon: tech.icon,
-        name: tech.name,
+        icon: techIcons[i % techIcons.length],
+        x: Math.random() * 100, // % position
+        y: Math.random() * 100, // % position
+        size: 24 + Math.random() * 24, // Size between 24px and 48px
+        delay: Math.random() * 5, // Random delay for animation start
       };
     });
     
-    setIcons(generatedIcons);
-  }, [animationType]);
+    setIcons(newIcons);
+  }, [density]);
 
-  if (animationType === 'orbiting') {
-    return (
-      <div className="tech-background">
-        <div className="orbit-container">
-          <motion.div
-            className="orbit"
-            animate={{ rotateY: [0, 360], rotateX: [0, 180] }}
-            transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-          >
-            {icons.map((icon, index) => (
-              <TechIcon
-                key={index}
-                icon={icon.icon}
-                name={icon.name}
-                style={{
-                  top: `${icon.top}%`,
-                  left: `${icon.left}%`,
-                  transform: `rotateY(${index * (360 / icons.length)}deg) translateZ(15vw)`,
-                }}
-                animationType={animationType}
-              />
-            ))}
-          </motion.div>
-        </div>
-      </div>
-    );
-  }
+  // Determine animation speed
+  const getDuration = () => {
+    return speed === 'slow' ? 8 :
+           speed === 'medium' ? 5 :
+           3; // fast
+  };
+
+  // Get animation variants based on animation type
+  const getAnimationVariants = (): Variants => {
+    const duration = getDuration();
+    
+    switch (animationType) {
+      case 'floating':
+        return {
+          animate: {
+            y: ['-10px', '10px', '-10px'],
+            rotate: ['-3deg', '3deg', '-3deg'],
+            transition: {
+              duration: duration,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }
+          }
+        };
+      case 'pulse':
+        return {
+          animate: {
+            scale: [1, 1.1, 1],
+            opacity: [0.7, 1, 0.7],
+            transition: {
+              duration: duration,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }
+          }
+        };
+      case 'orbit':
+        return {
+          animate: {
+            rotate: [0, 360],
+            transition: {
+              duration: duration * 2,
+              repeat: Infinity,
+              ease: 'linear',
+            }
+          }
+        };
+      case 'wave':
+        return {
+          animate: {
+            x: ['-5px', '5px', '-5px'],
+            y: ['-5px', '5px', '-5px'],
+            transition: {
+              duration: duration,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }
+          }
+        };
+      default:
+        return {
+          animate: {
+            y: ['-10px', '10px', '-10px'],
+            transition: {
+              duration: duration,
+              repeat: Infinity,
+              ease: 'easeInOut',
+            }
+          }
+        };
+    }
+  };
 
   return (
-    <div className="tech-background">
+    <div className="fixed inset-0 -z-10 overflow-hidden opacity-5 pointer-events-none">
       {icons.map((icon, index) => (
-        <TechIcon
+        <motion.div
           key={index}
-          icon={icon.icon}
-          name={icon.name}
+          className="absolute"
           style={{
-            top: `${icon.top}%`,
-            left: `${icon.left}%`,
-            animationDelay: `${icon.delay}s`
+            left: `${icon.x}%`,
+            top: `${icon.y}%`,
+            width: `${icon.size}px`,
+            height: `${icon.size}px`,
           }}
-          animationType={animationType}
-        />
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.8 }}
+          transition={{ delay: icon.delay }}
+          variants={getAnimationVariants()}
+          animate="animate"
+        >
+          <div 
+            className="w-full h-full flex items-center justify-center text-primary"
+            style={{ fontSize: `${icon.size}px` }}
+          >
+            <i className={`devicon-${icon.icon}-plain`}></i>
+          </div>
+        </motion.div>
       ))}
     </div>
   );

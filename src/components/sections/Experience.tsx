@@ -1,3 +1,4 @@
+
 import React from 'react';
 import TimelineItem from '@/components/ui/TimelineItem';
 import { motion } from 'framer-motion';
@@ -42,10 +43,10 @@ const experiences: Experience[] = [
   }
 ];
 
-const sectionRef = React.useRef<HTMLDivElement>(null);
-const [ref, isVisible] = useIntersectionObserver({ threshold: 0.2, rootMargin: "0px" });
-
 const Experience: React.FC = () => {
+  const sectionRef = React.useRef<HTMLDivElement>(null);
+  const [ref, isVisible] = useIntersectionObserver({ threshold: 0.2, rootMargin: "0px" });
+
   return (
     <section 
       id="experience" 
