@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useScrollProgress } from "@/utils/scrollUtils";
 import { cn } from "@/lib/utils";
 import { Zap, Sparkles, X } from "lucide-react";
