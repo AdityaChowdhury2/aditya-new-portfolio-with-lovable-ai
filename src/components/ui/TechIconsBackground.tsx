@@ -131,8 +131,7 @@ const TechIconsBackground: React.FC<TechIconsBackgroundProps> = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.8 }}
           transition={{ delay: icon.delay }}
-          variants={getAnimationVariants()}
-          animate="animate"
+          {...getAnimationVariants()}
         >
           <div 
             className="w-full h-full flex items-center justify-center text-primary"
