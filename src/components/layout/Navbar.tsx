@@ -125,23 +125,29 @@ const Navbar: React.FC = () => {
         </div>
       </div>
       
-      {/* Mobile Navigation - Animated Overlay */}
+      {/* Mobile Navigation - Animated Overlay with Glass Effect */}
       <div
         className={cn(
-          "md:hidden fixed inset-0 bg-gradient-animated z-40 transition-all duration-500 ease-out-expo pt-20",
+          "md:hidden fixed inset-0 z-40 transition-all duration-500 ease-out-expo",
           isMenuOpen 
             ? "opacity-100 pointer-events-auto clip-path-circle-full" 
             : "opacity-0 pointer-events-none clip-path-circle-0"
         )}
       >
-        <nav className="flex flex-col items-center justify-center h-full space-y-6 px-4 py-8">
+        {/* Glassmorphism background effect */}
+        <div className="absolute inset-0 bg-primary/5 backdrop-blur-xl border-r border-border/10"></div>
+        
+        {/* Animated gradient background */}
+        <div className="absolute inset-0 bg-gradient-animated opacity-50 mix-blend-overlay"></div>
+        
+        <nav className="flex flex-col items-center justify-center h-full space-y-6 px-4 py-8 relative z-10">
           {navLinks.map((link, index) => (
             <a
               key={link.href}
               href={link.href}
               className={cn(
-                "text-xl font-bold text-white py-3 w-full text-center transition-all",
-                "transform hover:scale-110 hover:text-white/80",
+                "text-xl font-bold text-foreground py-3 w-full text-center transition-all",
+                "transform hover:scale-110 hover:text-primary",
                 isMenuOpen ? "animate-fade-in-up" : "opacity-0"
               )}
               style={{ animationDelay: `${index * 0.1}s` }}
@@ -158,6 +164,7 @@ const Navbar: React.FC = () => {
             href="#contact" 
             className={cn(
               "mt-4 button-primary text-center w-full max-w-xs",
+              "backdrop-blur-sm bg-primary/80 border border-primary/30 shadow-lg",
               isMenuOpen ? "animate-fade-in-up" : "opacity-0"
             )}
             style={{ animationDelay: `${navLinks.length * 0.1}s` }}
