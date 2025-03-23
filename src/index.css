@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Raleway&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -146,6 +147,63 @@
 
   .nav-link.active {
     @apply text-foreground after:w-full;
+  }
+
+  .mobile-menu-trigger {
+    @apply relative w-8 h-8 flex items-center justify-center cursor-pointer;
+  }
+
+  .mobile-menu-trigger span {
+    @apply block w-6 h-0.5 bg-foreground transition-all duration-300;
+    position: relative;
+  }
+
+  .mobile-menu-trigger span::before,
+  .mobile-menu-trigger span::after {
+    content: '';
+    @apply absolute w-full h-0.5 bg-foreground right-0 transition-all duration-300;
+  }
+
+  .mobile-menu-trigger span::before {
+    top: -7px;
+  }
+
+  .mobile-menu-trigger span::after {
+    top: 7px;
+  }
+
+  .mobile-menu-trigger:hover span::before {
+    @apply w-1/2 transform rotate-30;
+    top: -3px;
+  }
+
+  .mobile-menu-trigger:hover span::after {
+    @apply w-1/2 transform -rotate-30;
+    top: 3px;
+  }
+
+  .mobile-menu-trigger.open span {
+    @apply bg-transparent;
+  }
+
+  .mobile-menu-trigger.open span::before {
+    @apply w-full;
+    top: 0;
+    transform: rotate(45deg);
+  }
+
+  .mobile-menu-trigger.open span::after {
+    @apply w-full;
+    top: 0;
+    transform: rotate(-45deg);
+  }
+
+  .mobile-menu-trigger.open:hover span::before {
+    transform: rotate(40deg);
+  }
+
+  .mobile-menu-trigger.open:hover span::after {
+    transform: rotate(-40deg);
   }
 }
 
@@ -404,3 +462,6 @@
 .color-option.active {
   @apply border-white dark:border-gray-800;
 }
+
+/* Add
+
