@@ -22,6 +22,8 @@ const Navbar: React.FC = () => {
   const [activeSection, setActiveSection] = useState("home");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const scrollProgress = useScrollProgress();
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -46,7 +48,60 @@ const Navbar: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const toggleMenu = () => setIsMenuOpen((prev) => !prev);
+  useEffect(() => {
+    // Handle touch gestures for the mobile menu
+    const handleTouchStart = (e: TouchEvent) => {
+      const touch = e.changedTouches[0];
+      touchStartRef.current = { x: touch.pageX, y: touch.pageY };
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (!touchStartRef.current) return;
+
+      const touch = e.changedTouches[0];
+      const xDiff = touchStartRef.current.x - touch.pageX;
+      const yDiff = touchStartRef.current.y - touch.pageY;
+
+      // If horizontal swipe is more significant than vertical
+      if (Math.abs(xDiff) > Math.abs(yDiff) && Math.abs(xDiff) > 120) {
+        if (xDiff > 0) {
+          // Swipe left, close the menu
+          setIsMenuOpen(false);
+        } else {
+          // Swipe right, open the menu if near the right edge
+          if (touchStartRef.current.x > window.innerWidth - 50) {
+            setIsMenuOpen(true);
+          }
+        }
+      }
+
+      touchStartRef.current = null;
+    };
+
+    // Handle clicks outside the mobile menu
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        isMenuOpen &&
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target as Node) &&
+        !(event.target as Element).closest(".menu-trigger")
+      ) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("touchstart", handleTouchStart);
+    document.addEventListener("touchend", handleTouchEnd);
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("touchstart", handleTouchStart);
+      document.removeEventListener("touchend", handleTouchEnd);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isMenuOpen]);
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
@@ -112,7 +167,7 @@ const Navbar: React.FC = () => {
 
           {/* Mobile Menu Button - Custom Design */}
           <button
-            className={`md:hidden p-2 text-foreground/80 hover:text-foreground relative z-50 flex items-center justify-center `}
+            className={`md:hidden p-2 text-foreground/80 hover:text-foreground relative z-50 flex items-center justify-center`}
             onClick={toggleMenu}
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
           >
@@ -120,12 +175,12 @@ const Navbar: React.FC = () => {
               <X size={24} className="text-foreground animate-fade-in" />
             ) : (
               <div className={`menu-icon ${isMenuOpen ? "menu-open" : ""}`}>
-                {/* <span className="line-1"></span>
+                <span className="line-1"></span>
                 <span className="line-2"></span>
-                <span className="line-3"></span> */}
+                <span className="line-3"></span>
                 <Zap
                   size={20}
-                  className="absolute text-primary  transition-opacity duration-300"
+                  className="absolute text-primary opacity-0 hover:opacity-100 transition-opacity duration-300"
                 />
               </div>
             )}
@@ -134,44 +189,62 @@ const Navbar: React.FC = () => {
       </div>
 
       {/* Mobile Navigation - Animated Overlay with Glass Effect */}
-
-      <nav
+      <div
         className={cn(
-          "fixed inset-0 z-50 bg-primary flex w-2/3 flex-col h-[110vh] justify-center items-center transform duration-1000 text-foreground space-y-4 ",
-          isMenuOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full"
+          "md:hidden fixed inset-0 z-40 transition-all duration-500 ease-out-expo",
+          isMenuOpen
+            ? "opacity-100 pointer-events-auto clip-path-circle-full"
+            : "opacity-0 pointer-events-none clip-path-circle-0"
         )}
       >
-        {navLinks.map((link, index) => (
+        {/* Glassmorphism background effect */}
+        <div className="absolute inset-0 bg-primary/5 backdrop-blur-xl border-r border-border/10"></div>
+
+        {/* Animated gradient background */}
+        <div className="absolute inset-0 bg-gradient-animated opacity-50 mix-blend-overlay"></div>
+
+        <nav className="flex flex-col items-center justify-center h-full space-y-6 px-4 py-8 relative z-10">
+          {navLinks.map((link, index) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className={cn(
+                "text-xl font-bold text-foreground py-3 w-full text-center transition-all",
+                "transform hover:scale-110 hover:text-primary",
+                isMenuOpen ? "animate-fade-in-up" : "opacity-0"
+              )}
+              style={{ animationDelay: `${index * 0.1}s` }}
+              onClick={(e) => {
+                e.preventDefault();
+                document
+                  .querySelector(link.href)
+                  ?.scrollIntoView({ behavior: "smooth" });
+                closeMenu();
+              }}
+            >
+              {link.label}
+            </a>
+          ))}
           <a
-            key={link.href}
-            href={link.href}
+            href="#contact"
             className={cn(
-              "font-bold text-foreground w-full text-center transition-all text-white",
-              "transform hover:scale-110 hover:text-primary",
+              "mt-4 button-primary text-center w-full max-w-xs",
+              "backdrop-blur-sm bg-primary/80 border border-primary/30 shadow-lg",
               isMenuOpen ? "animate-fade-in-up" : "opacity-0"
             )}
-            style={{ animationDelay: `${index * 0.1}s` }}
+            style={{ animationDelay: `${navLinks.length * 0.1}s` }}
             onClick={(e) => {
               e.preventDefault();
               document
-                .querySelector(link.href)
+                .querySelector("#contact")
                 ?.scrollIntoView({ behavior: "smooth" });
               closeMenu();
             }}
           >
-            {link.label}
+            Contact Me
           </a>
-        ))}
-      </nav>
-
-      <div
-        className={cn(
-          "fixed inset-0 bg-black z-1 bg-opacity-50 transition-opacity duration-300 ease-in-out h-[110vh]",
-          isMenuOpen
-            ? "opacity-100 visible h-screen transform"
-            : "opacity-0 invisible"
-        )}
-      ></div>
+        </nav>
+      </div>
     </header>
   );
 };
